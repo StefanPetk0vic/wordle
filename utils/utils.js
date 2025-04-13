@@ -2,6 +2,13 @@ import { ResetGame } from "../core/uiHandler.js";
 import { GameState } from "../data/gameState.js";
 
 
+let resetButton = document.getElementById("playAgain");
+const popupContainer = document.getElementById('endPopupContainer');
+resetButton.addEventListener("click", () => { 
+    ResetGame();
+    popupContainer.classList.remove("show");
+});
+
 function ErrorHandler(errorInfo) {
     const popupContainer = document.getElementById('errorPopupContainer');
     const popup = document.getElementById("popup");
@@ -48,11 +55,6 @@ function EndHandler(endInfo) {
     closeButton.addEventListener("click", () => {
         popupContainer.classList.remove("show");
     });
-
-    resetButton.addEventListener("click", () => {
-        ResetGame();
-        popupContainer.classList.remove("show");
-    });
 }
 
 function FreeColumn(param = 0) {
@@ -71,12 +73,12 @@ function FreeColumn(param = 0) {
 }
 function LockColumn(param) {
     let targetInput;
-    for (let i = 0; i <= 5; i++) {
+    for (let i = 0; i < 5; i++) {
         targetInput = document.getElementById(`r${param}c${i}`);
         if (targetInput) {
             targetInput.setAttribute("disabled", "true");
         } else {
-            console.warn(`Error something went wrong`);
+            console.warn(`Error something went wrong on the ${i}th attempt`);
         }
     }
 }
@@ -97,6 +99,11 @@ function GenerateGrid() {
             InputBox.disabled = true;
             InputBox.id = `r${r}c${c}`;
             InputBox.setAttribute('oninput', `handleInput(this.id,this.value)`);
+
+            InputBox.addEventListener('focus', function () {
+                this.select();
+            });
+
             rowDiv.appendChild(InputBox);
         }
         gridContainer.appendChild(rowDiv);
@@ -147,7 +154,7 @@ function ShowHint() {
     closeButton.addEventListener("click", () => {
         popupContainer.classList.remove("show");
     });
-
+    GameState.score-=25;
 }
 
 export { ErrorHandler, EndHandler, FreeColumn, GenerateGrid, ClearGrid, ShowHint, LockColumn };

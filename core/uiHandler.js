@@ -10,6 +10,7 @@ document.addEventListener("keydown", function (event) {
         try {
             let InputBox = document.getElementById(`r${GameState.row}c${GameState.column - 1}`);
             GameState.tryWord.pop();
+            InputBox.classList.remove("added-character");
             console.log(GameState.tryWord);
             InputBox.focus();
             GameState.column--;
@@ -23,7 +24,7 @@ document.addEventListener("keydown", function (event) {
 document.addEventListener("keydown", function (event) {
 
     if (event.key == "Enter") {
-        console.log("ENTER PRESSED");
+        console.log("Enter pressed");
         ButtonPress();
     }
 })
@@ -41,13 +42,10 @@ function handleInput(input_id, input_value) {
             GameState.tryWord[input_id[3]]=input_value.toUpperCase();
             console.log(GameState.tryWord);
         }
-        //Changed for easier stacking of logs in inspect
         //console.log("Added from handleInput(): " + GameState.tryWord.join(""));
-        console.log("Added letter with handleInput()");
-        
         if (GameState.column < 5) {
             targetInput = document.getElementById(`r${GameState.row}c${GameState.column}`);
-            console.log(`r${GameState.row}c${GameState.column}`);
+            //console.log(`r${GameState.row}c${GameState.column}`);
             targetInput.focus();
         }
     }
@@ -61,11 +59,7 @@ function AddLetter(clicked_id, input_value) {
         GameState.tryWord.push(x.innerHTML);
         AddScreenLetter(x.innerHTML);
         GameState.column++;
-
-        //Changed for easier stacking of logs in inspect
-        //console.log("Added from AddLetter(): " + GameState.tryWord);
-        console.log("New letter added");
-        
+        //console.log("Added from AddLetter(): " + GameState.tryWord);        
     } else {
         console.log("All letters are added");
     }
@@ -104,6 +98,9 @@ function ResetGame() {
     GetWord();
     GameState.row = 0;
     GameState.column = 0;
+    GameState.won=false;
+    const targetInput = document.getElementById(`r${GameState.row}c${GameState.column}`);
+    targetInput.focus();
 }
 
 function SwitchMode() {

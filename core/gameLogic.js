@@ -14,6 +14,8 @@ async function ButtonPress() {
         return;
     }
 
+    console.log("THE WORD YOU ENTERED: "+GameState.tryWord);
+    
 
     let answerChars = [...GameState.answer];
     let tryWordChars = [...GameState.tryWord];
@@ -49,24 +51,33 @@ async function ButtonPress() {
     }
 
     let ans = document.getElementById("answerText");
-    console.log("EVOOO MEEE" + GameState.row);
     if (GameState.tryWord.join("") === GameState.answer) {
         ans.classList.add("correct-answer");
         EndHandler("You did it!");
+        GameState.score+=100;
+        GameState.won = true;
     }
     else if (GameState.row == 5) {
         ans.classList.add("wrong-answer");
         EndHandler("You failed!");
+        GameState.won = false;
     }
-    End();
+    End(GameState.won);
 }
 
-function End() {
+function End(winFlag) {
+    console.log("The total score was: "+ GameState.score);
+    
     GameState.row++;
     GameState.column = 0;
     GameState.tryWord = [];
-    (GameState.row < 6) ? (FreeColumn(GameState.row)) : (GameState.row === 6, FreeColumn());
     LockColumn(GameState.row - 1);
+    if(GameState.won==true || GameState.row === 6){
+        FreeColumn();
+        return;
+    }
+    FreeColumn(GameState.row);
+    return;
 }
 
 export { ButtonPress }
