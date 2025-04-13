@@ -1,7 +1,5 @@
 import { GameState } from "../data/gameState.js";
-import { FreeColumn, EndHandler, ErrorHandler } from "../utils/utils.js";
-
-
+import { FreeColumn, EndHandler, ErrorHandler, LockColumn } from "../utils/utils.js";
 
 async function ButtonPress() {
 
@@ -9,8 +7,8 @@ async function ButtonPress() {
         ErrorHandler("The length of the word isn't 5 letters");
         return;
     }
-    console.log(GameState.tryWord.join(""));
-    const exists = await WordExists(GameState.tryWord.join(""));
+    const exists = await getMeaning(GameState.tryWord.join(""));
+
     if (!exists) {
         ErrorHandler("The word does not exist");
         return;
@@ -25,7 +23,8 @@ async function ButtonPress() {
         const targetBox = document.getElementById(inputId);
 
         if (GameState.tryWord[i] === GameState.answer[i]) {
-            targetBox.style.backgroundColor = "rgb(114,221,38)";
+            targetBox.classList.add("correct-box");
+
             answerChars[i] = null;
             tryWordChars[i] = null;
         }
@@ -41,39 +40,33 @@ async function ButtonPress() {
         const targetBox = document.getElementById(inputId);
 
         if (tryWordChars[i] !== null && answerChars.includes(tryWordChars[i])) {
-            targetBox.style.backgroundColor = "rgb(248, 215, 50)";
+            targetBox.classList.add("close-box");
             answerChars[answerChars.indexOf(tryWordChars[i])] = null;
         } else if (tryWordChars[i] !== null) {
-            targetBox.style.backgroundColor = "rgb(244, 62, 62)";
+            targetBox.classList.add("wrong-box");
 
         }
     }
 
+    let ans = document.getElementById("answerText");
+    console.log("EVOOO MEEE" + GameState.row);
     if (GameState.tryWord.join("") === GameState.answer) {
-        End();
+        ans.classList.add("correct-answer");
         EndHandler("You did it!");
-        return; 
     }
-    else if (GameState.row==5)
-    {
-        End();
+    else if (GameState.row == 5) {
+        ans.classList.add("wrong-answer");
         EndHandler("You failed!");
-        return; 
     }
-
     End();
-
-  
 }
 
-function End()
-{
+function End() {
     GameState.row++;
     GameState.column = 0;
     GameState.tryWord = [];
-    if (GameState.row < 6) {
-        FreeColumn(GameState.row); 
-    }
+    (GameState.row < 6) ? (FreeColumn(GameState.row)) : (GameState.row === 6, FreeColumn());
+    LockColumn(GameState.row - 1);
 }
 
-export {ButtonPress}
+export { ButtonPress }

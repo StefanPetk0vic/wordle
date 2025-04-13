@@ -3,20 +3,26 @@ import { GameState } from "../data/gameState.js";
 
 
 function ErrorHandler(errorInfo) {
-
     const popupContainer = document.getElementById('errorPopupContainer');
     const popup = document.getElementById("popup");
     let errorMsg = document.querySelector("#errorText");
 
     popupContainer.classList.add("show");
     errorMsg.textContent = errorInfo;
-    console.log("error");
+    console.log("error found by ErrorHandler()");
 
     clearTimeout(GameState.popupTimeout);
 
-    GameState.popupTimeout = setInterval(() => {
+    GameState.popupTimeout = setTimeout(() => {
         popupContainer.classList.remove("show");
     }, 1000);
+
+    const hidePopup = () => {
+        popupContainer.classList.remove("show");
+        document.removeEventListener("click", hidePopup); 
+    };
+
+    document.addEventListener("click", hidePopup);
 }
 
 function EndHandler(endInfo) {
@@ -28,12 +34,16 @@ function EndHandler(endInfo) {
     let desc = document.getElementById("descText");
     let ans = document.getElementById("answerText");
     let resetButton = document.getElementById("playAgain");
-
+    
     popupContainer.classList.add("show");
     endMsg.textContent = endInfo;
     ans.textContent = `${GameState.answer}`;
-    desc.textContent = `Meaning: ${GameState.desc}`
-    console.log("end");
+    desc.textContent = `Meaning: ${GameState.desc}`;
+
+    const computedColor = window.getComputedStyle(ans).color;
+    resetButton.style.backgroundColor = computedColor;
+
+    console.log("end of Game");
 
     closeButton.addEventListener("click", () => {
         popupContainer.classList.remove("show");
@@ -47,38 +57,51 @@ function EndHandler(endInfo) {
 
 function FreeColumn(param = 0) {
     let targetInput;
+    let FocusFirst;
     for (let i = 0; i < 5; i++) {
-        
         targetInput = document.getElementById(`r${param}c${i}`);
-
-
+        FocusFirst = document.getElementById(`r${param}c${0}`);
         if (targetInput) {
             targetInput.removeAttribute("disabled");
         } else {
             console.warn(`Input element r${param}c${i} not found`);
+        }
+        if (i == 0) { setTimeout(() => { FocusFirst.focus(); }, 0); }
+    }
+}
+function LockColumn(param) {
+    let targetInput;
+    for (let i = 0; i <= 5; i++) {
+        targetInput = document.getElementById(`r${param}c${i}`);
+        if (targetInput) {
+            targetInput.setAttribute("disabled", "true");
+        } else {
+            console.warn(`Error something went wrong`);
         }
     }
 }
 function GenerateGrid() {
     let gridContainer = document.querySelector(".grid-container");
     const rows = 6;
-    const cols=5;
+    const cols = 5;
     for (let r = 0; r < rows; r++) {
+        let rowDiv = document.createElement('div');
+        rowDiv.className = "box-row";
         for (let c = 0; c < cols; c++) {
             let InputBox = document.createElement('input');
-            InputBox.className="box";
+            InputBox.className = "box";
             InputBox.type = "text";
-            InputBox.maxLength=1;
-            InputBox.value="";
-            InputBox.autocomplete="off";
-            InputBox.disabled =true;
-            InputBox.id=`r${r}c${c}`;
-            InputBox.setAttribute('oninput',`handleInput(this.id,this.value)`);
-            gridContainer.appendChild(InputBox);
+            InputBox.maxLength = 1;
+            InputBox.value = "";
+            InputBox.autocomplete = "off";
+            InputBox.disabled = true;
+            InputBox.id = `r${r}c${c}`;
+            InputBox.setAttribute('oninput', `handleInput(this.id,this.value)`);
+            rowDiv.appendChild(InputBox);
         }
+        gridContainer.appendChild(rowDiv);
     }
 }
-
 function ClearGrid()
 {
     let gridContainer = document.querySelector(".grid-container");
@@ -93,22 +116,38 @@ function ClearGrid()
                 const cellColor = cell.style.backgroundColor;
                 const cellValue = cell.value;
 
-                if (cellColor === "rgb(244, 62, 62)" && cellValue) {
+                if (cell && cell.classList.contains("wrong-box") && cell.value) {
                     const keyBtn = document.getElementById(cellValue.toUpperCase());
 
                     if (keyBtn) 
-                    {  
-                        keyBtn.style.backgroundColor = "rgb(234, 234, 234)";
-                        keyBtn.style.border = "3px groove #cacaca";
-                    }
+                        {
+                            keyBtn.classList.remove("wrong-letter");
+                        }
                  
                 }
 
                 cell.value = "";
-                cell.style.backgroundColor = "rgb(255, 255, 255)"; 
+                cell.classList.remove("wrong-box", "correct-box", "close-box", "added-character");
             }
         }
     }
 }
 
-export { ErrorHandler, EndHandler, FreeColumn, GenerateGrid, ClearGrid };
+function ShowHint() {
+
+    const popupContainer = document.getElementById('hintPopupContainer');
+    const popup = document.getElementById("popup");
+    const closeButton = document.getElementById("closeHintPopup");
+    let desc = document.getElementById("descHint");
+
+    popupContainer.classList.add("show");
+    desc.textContent = `Meaning: ${GameState.desc}`
+    console.log("hint shown");
+
+    closeButton.addEventListener("click", () => {
+        popupContainer.classList.remove("show");
+    });
+
+}
+
+export { ErrorHandler, EndHandler, FreeColumn, GenerateGrid, ClearGrid, ShowHint, LockColumn };
