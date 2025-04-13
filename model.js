@@ -1,13 +1,12 @@
 import { ButtonPress } from "./core/gameLogic.js";
 import { handleInput, AddScreenLetter, DeleteLetter, AddLetter, ResetGame, SwitchMode } from "./core/uiHandler.js";
-import { GetWord, getMeaning, WordExists } from "./services/apiService.js";
+import { GetWord, getMeaning } from "./services/apiService.js";
 import { ErrorHandler, FreeColumn, GenerateGrid, ShowHint } from "./utils/utils.js";
 
 window.AddLetter = AddLetter;
 window.DeleteLetter = DeleteLetter;
 window.handleInput = handleInput;
 window.ButtonPress = ButtonPress;
-window.WordExists = WordExists;
 window.getMeaning = getMeaning;
 window.AddScreenLetter = AddScreenLetter;
 window.ErrorHandler = ErrorHandler;

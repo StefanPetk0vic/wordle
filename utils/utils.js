@@ -9,7 +9,7 @@ function ErrorHandler(errorInfo) {
 
     popupContainer.classList.add("show");
     errorMsg.textContent = errorInfo;
-    console.log("error");
+    console.log("error found by ErrorHandler()");
 
     clearTimeout(GameState.popupTimeout);
 
@@ -43,7 +43,7 @@ function EndHandler(endInfo) {
     const computedColor = window.getComputedStyle(ans).color;
     resetButton.style.backgroundColor = computedColor;
 
-    console.log("end");
+    console.log("end of Game");
 
     closeButton.addEventListener("click", () => {
         popupContainer.classList.remove("show");
@@ -66,11 +66,17 @@ function FreeColumn(param = 0) {
         } else {
             console.warn(`Input element r${param}c${i} not found`);
         }
-        if(i==0){
-            console.log("EVOOO MEEE FOCUS MEEE");
-            setTimeout(() => {
-                FocusFirst.focus();
-            }, 0);
+        if (i == 0) { setTimeout(() => { FocusFirst.focus(); }, 0); }
+    }
+}
+function LockColumn(param) {
+    let targetInput;
+    for (let i = 0; i <= 5; i++) {
+        targetInput = document.getElementById(`r${param}c${i}`);
+        if (targetInput) {
+            targetInput.setAttribute("disabled", "true");
+        } else {
+            console.warn(`Error something went wrong`);
         }
     }
 }
@@ -144,4 +150,4 @@ function ShowHint() {
 
 }
 
-export { ErrorHandler, EndHandler, FreeColumn, GenerateGrid, ClearGrid, ShowHint };
+export { ErrorHandler, EndHandler, FreeColumn, GenerateGrid, ClearGrid, ShowHint, LockColumn };

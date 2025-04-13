@@ -41,7 +41,10 @@ function handleInput(input_id, input_value) {
             GameState.tryWord[input_id[3]]=input_value.toUpperCase();
             console.log(GameState.tryWord);
         }
-        console.log("Added from handleInput(): " + GameState.tryWord.join(""));
+        //Changed for easier stacking of logs in inspect
+        //console.log("Added from handleInput(): " + GameState.tryWord.join(""));
+        console.log("Added letter with handleInput()");
+        
         if (GameState.column < 5) {
             targetInput = document.getElementById(`r${GameState.row}c${GameState.column}`);
             console.log(`r${GameState.row}c${GameState.column}`);
@@ -59,7 +62,10 @@ function AddLetter(clicked_id, input_value) {
         AddScreenLetter(x.innerHTML);
         GameState.column++;
 
-        console.log("Added from AddLetter(): " + GameState.tryWord);
+        //Changed for easier stacking of logs in inspect
+        //console.log("Added from AddLetter(): " + GameState.tryWord);
+        console.log("New letter added");
+        
     } else {
         console.log("All letters are added");
     }
@@ -74,10 +80,10 @@ function AddScreenLetter(letter) {
 
 function DeleteLetter() {
     if (GameState.tryWord.length > 0) {
-        console.log("The letter:", GameState.tryWord[GameState.tryWord.length - 1]);
+        //console.log("The letter:", GameState.tryWord[GameState.tryWord.length - 1]);
         GameState.tryWord.pop();
-        console.log("After deleting:", GameState.tryWord);
-        console.log(`Current row n col: r${GameState.row}c${GameState.column - 1}`);
+        //console.log("After deleting:", GameState.tryWord);
+        //console.log(`Current row n col: r${GameState.row}c${GameState.column - 1}`);
 
         const inputId = `r${GameState.row}c${GameState.column - 1}`;
         const targetInput = document.querySelector(`#${inputId}`);
@@ -89,7 +95,7 @@ function DeleteLetter() {
             GameState.column--;
         }
     } else {
-        console.log("Empty word");
+        //console.log("Empty word");
     }
 }
 

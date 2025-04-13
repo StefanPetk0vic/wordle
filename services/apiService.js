@@ -1,29 +1,5 @@
 import { GameState } from "../data/gameState.js";
 
-
-async function WordExists(word) {
-    try {
-        const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word.toLowerCase()}`);
-
-        if (response.status === 404) {
-            console.log(`"${word}" is NOT a valid word.`);
-            return false;
-        }
-
-        if (!response.ok) {
-            console.error("Error fetching word data.");
-            return false;
-        }
-
-        //const data = await response.json();
-        console.log(`"${word}" is a valid word.`);
-        return true;
-    } catch (err) {
-        console.error("Fetch failed:", err);
-        return false;
-    }
-}
-
 async function GetWord() {
     await fetch("https://random-word-api.vercel.app/api?words=1&length=5")
         .then(response => response.json())
@@ -35,17 +11,30 @@ async function GetWord() {
         GetWord();
         return;
     }
-    console.log("%c"+GameState.answer, "color: yellow; font-size: 12px;");
-    getMeaning();
+    console.log("%c" + GameState.answer, "color: yellow; font-size: 12px;");
+    if (!getMeaning(GameState.answer, true)) {
+        GetWord();
+    }
 };
 
-async function getMeaning() {
-    await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${GameState.answer}`)
-        .then(response => response.json())
-        .then(([descr]) => {
-            GameState.desc = descr.meanings[0].definitions[0].definition;
-        });
-    console.log("%c"+GameState.desc, "color: yellow; font-size: 12px;");
+async function getMeaning(param, ADMIN = false) {
+    let meaning;
+    try {
+        await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${param}`)
+            .then(response => response.json())
+            .then(([desc]) => {
+                meaning = desc.meanings[0].definitions[0].definition;
+            });
+        if (ADMIN) {
+            console.log("%c" + meaning, "color: yellow; font-size: 12px;");
+            GameState.desc = meaning;
+        }
+        return true;
+    }
+    catch {
+        console.warn("The meaning wasn't found");
+        return false;
+    }
 }
 
-export { WordExists, GetWord, getMeaning };
+export { GetWord, getMeaning };
