@@ -5,6 +5,7 @@
 
 body
 {
+    overflow-y: hidden;
     font-family: Roboto;
     font-size: 30px;
     background-color: var(--body-background-color);
@@ -24,6 +25,8 @@ input{
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    overflow-y: hidden;
 
 }
 
@@ -60,7 +63,6 @@ input{
 
     width: 100%;
 
-    width: 450px;
     margin-bottom: 0px;
     margin-top: 0px;
     padding-top: 0;
@@ -71,6 +73,9 @@ input{
 .keyboard-row {
     text-align: center;
     width: 100%;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-top: 0;
 }
 
 .key {
@@ -78,7 +83,8 @@ input{
     display: inline-block;
     border: 1.5px solid var(--key-border-color);
     padding: 10px;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
+    margin-top: 0px;
     background-color: var(--key-background-color); 
     color: var(--key-color);
 
@@ -102,10 +108,9 @@ input{
     display: flex;
     flex-direction: column;
     row-gap: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 8px;
 
     max-width: 350px;
-    max-height: 500px;
     
 }
 
@@ -168,12 +173,12 @@ input{
 }
 .popup {
     position: relative;
-    width: 370px;
+    width: 350px;
     padding: 20px;
     border-radius: 10px;
     background-color: var(--popup-background-color);
     font-weight: 600;
-    font-size: 3rem;
+    
     box-shadow: 5px 5px 3px var(--popup-box-shadow);
     text-align: center;
     color: var(--box-color);
@@ -214,7 +219,15 @@ input{
     }
 
     .answer {
-        font-size: 25px;
+        font-size: 30px;
+    }
+
+    .error-type {
+        font-size: 30px;
+    }
+
+    .end-type {
+        font-size: 30px;
     }
 
     .restart {
@@ -256,14 +269,17 @@ input{
         border-radius: 22px;
     }
 
+    .hint-container {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
 
   .hint {
     
-    margin-right: 430px;
-    margin-left: 0px;
     border-radius: 30px;
-    width: 40px;
-    height: 41px;
+    width: 35px;
+    height: 36px;
     background-color: var(--key-background-color);
 
     border: 1.5px solid var(--key-border-color);
@@ -274,8 +290,9 @@ input{
 
     cursor: pointer;
 
+    margin-top: 0px;
+    margin-bottom: 8px;
 
-    display:inline-block
   }
 
   .hint:hover {
@@ -289,8 +306,8 @@ input{
 
   .switch-mode {
       position: fixed;
-      left: 5%;
-      top: 2%;
+      left: 2%;
+      top: 3%;
       width: 50px;
       height: 20px;
       
@@ -298,21 +315,21 @@ input{
   
   .slider-background {
       background-color: var(--slider-background);
-      width: 50px;
-      height: 20px;
+      width: 45px;
+      height: 15px;
       border-radius: 10px;
       
   }
   
   .slider-day-sign {
-    font-size: 14px;
+    font-size: 10px;
     top: 0px;
-    left: 30px;
+    left: 31px;
     position: absolute;
   }
 
   .slider-night-sign {
-    font-size: 14px;
+    font-size: 10px;
     top: 0px;
     left: 0px;
     position: absolute;
@@ -320,13 +337,13 @@ input{
 
 
   .slider {
-      width: 16px;
-      height: 16px;
+      width: 13px;
+      height: 13px;
       background-color: rgb(237, 237, 237);
       border-radius: 50%;
       position: absolute;
-      top: 2px;
-      left: 2px;
+      top: 1px;
+      left: 1px;
       cursor: pointer;
       
       border: 1.5px solid rgb(133, 133, 133);
@@ -338,7 +355,7 @@ input{
   }
 
   .slider.active {
-    left: 32px;
+    left: 31px;
     transition: left 0.3s ease;
 }
 
@@ -419,3 +436,94 @@ body.night {
     
 }
 
+
+@media (max-width: 430px) {
+    .key {
+        padding: 6px;
+        font-size: 14px;
+    }
+
+    .hint {
+        font-size: 11px;
+        width: 25px;
+        height: 26px;
+        margin-bottom: 0px;
+    }
+    
+    .hint-container {
+        margin-top: 0px;
+    }    
+
+    .grid-container {
+        margin-bottom: 0px;
+    }
+
+    .switch-mode {
+        position: fixed;
+        left: 0.5%;
+        top: 2%;
+        width: 50px;
+        height: 20px;
+        
+    }
+    
+    .slider-background {
+        background-color: var(--slider-background);
+        width: 45px;
+        height: 15px;
+        border-radius: 10px;
+        
+    }
+    
+    .slider-day-sign {
+      font-size: 10px;
+      top: 1px;
+      left: 31px;
+      position: absolute;
+    }
+  
+    .slider-night-sign {
+      font-size: 10px;
+      top: 1px;
+      left: 1px;
+      position: absolute;
+    }
+
+    .line {
+
+        font-size: 15px;
+
+    }
+    .description {
+
+        font-size: 15px;
+
+    }
+
+    .answer {
+        font-size: 20px;
+    }
+
+    .error-type {
+        font-size: 15px;
+    }
+
+    .end-type {
+        font-size: 15px;
+    }
+
+    .restart {
+       
+        font-size: 15px;
+       
+    }
+
+    .popup {
+        
+        width: 200px;
+        
+      }
+      
+    
+  
+}
