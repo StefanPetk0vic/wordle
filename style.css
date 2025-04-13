@@ -523,7 +523,9 @@ body.night {
         width: 200px;
         
       }
-      
-    
-  
+}
+@media (max-height: 400px) {
+    .keyboard-container{
+        display: none;
+    }
 }
