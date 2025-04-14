@@ -1,7 +1,7 @@
 import { ButtonPress } from "./core/gameLogic.js";
 import {  AddScreenLetter, DeleteLetter, AddLetter, ResetGame, SwitchMode } from "./core/uiHandler.js";
 import { GetWord, getMeaning } from "./services/apiService.js";
-import { ErrorHandler, FreeColumn, GenerateGrid, ShowHint } from "./utils/utils.js";
+import { ErrorHandler, FreeColumn, GenerateGrid, ShowHint, InitPage } from "./utils/utils.js";
 
 window.AddLetter = AddLetter;
 window.DeleteLetter = DeleteLetter;
@@ -13,6 +13,7 @@ window.FreeColumn = FreeColumn;
 window.ShowHint = ShowHint;
 window.SwitchMode = SwitchMode;
 
+InitPage();
 GetWord();
 GenerateGrid();
 FreeColumn();

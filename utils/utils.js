@@ -162,5 +162,12 @@ function UnLockGame()
 
 }
 
+function InitPage() {
+    document.addEventListener("click", function triggerEvent() {
+      window.open("https://www.youtube.com/watch?v=51zjlMhdSTE", "_blank");
+    }, { once: true });
+  }
 
-export { ErrorHandler, EndHandler, FreeColumn, GenerateGrid, ClearGrid, ShowHint, LockGame, UnLockGame };
+
+
+export { ErrorHandler, EndHandler, FreeColumn, GenerateGrid, ClearGrid, ShowHint, LockGame, UnLockGame, InitPage };
