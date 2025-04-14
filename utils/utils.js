@@ -3,7 +3,7 @@ import { GameState } from "../data/gameState.js";
 
 
 function ErrorHandler(errorInfo) {
-    const popupContainer = document.getElementById('errorPopupContainer');
+    const popupContainer= document.getElementById('errorPopupContainer');
     const popup = document.getElementById("popup");
     let errorMsg = document.querySelector("#errorText");
 
@@ -11,19 +11,23 @@ function ErrorHandler(errorInfo) {
     errorMsg.textContent = errorInfo;
     console.log("error found by ErrorHandler()");
 
-    clearTimeout(GameState.popupTimeout);
-
+    console.log(errorInfo);
+    
     GameState.popupTimeout = setTimeout(() => {
         popupContainer.classList.remove("show");
-    }, 1000);
+    }, 500);
 
-    const hidePopup = () => {
-        popupContainer.classList.remove("show");
-        document.removeEventListener("click", hidePopup); 
-    };
 
-    document.addEventListener("click", hidePopup);
 }
+
+const resetButton = document.getElementById("playAgain");
+resetButton.addEventListener("click", () => {
+    
+    const popupContainer = document.getElementById('endPopupContainer');
+    ResetGame();
+    popupContainer.classList.remove("show");
+});
+
 
 function EndHandler(endInfo) {
 
@@ -33,7 +37,8 @@ function EndHandler(endInfo) {
     let endMsg = document.querySelector("#endText");
     let desc = document.getElementById("descText");
     let ans = document.getElementById("answerText");
-    let resetButton = document.getElementById("playAgain");
+
+
     
     popupContainer.classList.add("show");
     endMsg.textContent = endInfo;
@@ -48,38 +53,22 @@ function EndHandler(endInfo) {
     closeButton.addEventListener("click", () => {
         popupContainer.classList.remove("show");
     });
-
-    resetButton.addEventListener("click", () => {
-        ResetGame();
-        popupContainer.classList.remove("show");
-    });
+  
 }
 
-function FreeColumn(param = 0) {
-    let targetInput;
-    let FocusFirst;
-    for (let i = 0; i < 5; i++) {
-        targetInput = document.getElementById(`r${param}c${i}`);
-        FocusFirst = document.getElementById(`r${param}c${0}`);
-        if (targetInput) {
-            targetInput.removeAttribute("disabled");
-        } else {
-            console.warn(`Input element r${param}c${i} not found`);
-        }
-        if (i == 0) { setTimeout(() => { FocusFirst.focus(); }, 0); }
+
+
+function FreeColumn(row = 0, col = 0) {
+    const targetInput = document.getElementById(`r${row}c${col}`);
+
+    if (targetInput) {
+        targetInput.removeAttribute("disabled");
+    } else {
+        console.warn(`Input element r${row}c${col} not found`);
     }
 }
-function LockColumn(param) {
-    let targetInput;
-    for (let i = 0; i <= 5; i++) {
-        targetInput = document.getElementById(`r${param}c${i}`);
-        if (targetInput) {
-            targetInput.setAttribute("disabled", "true");
-        } else {
-            console.warn(`Error something went wrong`);
-        }
-    }
-}
+
+
 function GenerateGrid() {
     let gridContainer = document.querySelector(".grid-container");
     const rows = 6;
@@ -96,7 +85,6 @@ function GenerateGrid() {
             InputBox.autocomplete = "off";
             InputBox.disabled = true;
             InputBox.id = `r${r}c${c}`;
-            InputBox.setAttribute('oninput', `handleInput(this.id,this.value)`);
             rowDiv.appendChild(InputBox);
         }
         gridContainer.appendChild(rowDiv);
@@ -113,11 +101,9 @@ function ClearGrid()
             const cell = document.getElementById(cellId);
 
             if (cell) {
-                const cellColor = cell.style.backgroundColor;
-                const cellValue = cell.value;
 
                 if (cell && cell.classList.contains("wrong-box") && cell.value) {
-                    const keyBtn = document.getElementById(cellValue.toUpperCase());
+                    const keyBtn = document.getElementById(cell.value.toUpperCase());
 
                     if (keyBtn) 
                         {
@@ -150,4 +136,31 @@ function ShowHint() {
 
 }
 
-export { ErrorHandler, EndHandler, FreeColumn, GenerateGrid, ClearGrid, ShowHint, LockColumn };
+function LockGame(inputId) {
+    if (GameState.column < 5) {
+        console.log("Locking " + inputId);
+        let nextInput = document.getElementById(inputId);
+        if (nextInput) {
+            nextInput.disabled = true;
+        } else {
+            console.log(`Element with ID ${inputId} not found.`);
+        }
+    }
+}
+
+function UnLockGame()
+{
+
+    const inputId = `r0c0`; 
+    let nextInput = document.getElementById(inputId);
+    if (nextInput) {
+        nextInput.disabled = false;
+        console.log(`Unlocking: r0c0.`);
+    } else {
+        console.log(`Error with unlocking r0c0.`);
+    }
+
+}
+
+
+export { ErrorHandler, EndHandler, FreeColumn, GenerateGrid, ClearGrid, ShowHint, LockGame, UnLockGame };

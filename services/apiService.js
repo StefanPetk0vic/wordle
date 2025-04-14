@@ -1,21 +1,25 @@
 import { GameState } from "../data/gameState.js";
 
 async function GetWord() {
-    await fetch("https://random-word-api.vercel.app/api?words=1&length=5")
-        .then(response => response.json())
-        .then(([word]) => {
-            GameState.answer = word.toUpperCase();
-        });
-    if (GameState.answer === "" || GameState.answer === "yo-yo") {
+
+    const response = await fetch("https://random-word-api.vercel.app/api?words=1&length=5");
+    const [word] = await response.json();
+
+    GameState.answer = word.toUpperCase();
+
+    if (GameState.answer === "" || GameState.answer === "YO-YO") {
         console.log("The word wasn't allowed");
-        GetWord();
-        return;
+        return GetWord(); 
     }
-    console.log("%c" + GameState.answer, "color: yellow; font-size: 12px;");
-    if (!getMeaning(GameState.answer, true)) {
-        GetWord();
+
+    console.log("%c" + GameState.answer, "color: blue; font-size: 12px;");
+
+    const meaningFound = await getMeaning(GameState.answer, true);
+
+    if (!meaningFound) {
+        return GetWord(); 
     }
-};
+}
 
 async function getMeaning(param, ADMIN = false) {
     let meaning;
@@ -26,7 +30,7 @@ async function getMeaning(param, ADMIN = false) {
                 meaning = desc.meanings[0].definitions[0].definition;
             });
         if (ADMIN) {
-            console.log("%c" + meaning, "color: yellow; font-size: 12px;");
+            console.log("%c" + meaning, "color: blue; font-size: 12px;");
             GameState.desc = meaning;
         }
         return true;
@@ -37,4 +41,4 @@ async function getMeaning(param, ADMIN = false) {
     }
 }
 
-export { GetWord, getMeaning };
+export { GetWord, getMeaning }; 

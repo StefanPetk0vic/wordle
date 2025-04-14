@@ -1,19 +1,29 @@
 import { GameState } from "../data/gameState.js";
-import { FreeColumn, EndHandler, ErrorHandler, LockColumn } from "../utils/utils.js";
+import { FreeColumn, EndHandler, ErrorHandler, LockGame } from "../utils/utils.js";
+import { AddShakingAnimation } from "../animations/animations.js";
 
 async function ButtonPress() {
 
+    if (event) {
+        event.preventDefault();
+    }
+
     if (GameState.answer.length != GameState.tryWord.length) {
+
+        AddShakingAnimation();
+
         ErrorHandler("The length of the word isn't 5 letters");
         return;
     }
-    const exists = await getMeaning(GameState.tryWord.join(""));
+    const exists = await getMeaning(GameState.tryWord.join(""), true);
 
     if (!exists) {
+
+        AddShakingAnimation();
+        
         ErrorHandler("The word does not exist");
         return;
     }
-
 
     let answerChars = [...GameState.answer];
     let tryWordChars = [...GameState.tryWord];
@@ -21,6 +31,8 @@ async function ButtonPress() {
     for (let i = 0; i < GameState.answer.length; i++) {
         const inputId = `r${GameState.row}c${i}`;
         const targetBox = document.getElementById(inputId);
+
+        targetBox.classList.add('flip-box'); 
 
         if (GameState.tryWord[i] === GameState.answer[i]) {
             targetBox.classList.add("correct-box");
@@ -51,22 +63,25 @@ async function ButtonPress() {
     let ans = document.getElementById("answerText");
     console.log("EVOOO MEEE" + GameState.row);
     if (GameState.tryWord.join("") === GameState.answer) {
+       
         ans.classList.add("correct-answer");
+        GameState.gameOver=true;
         EndHandler("You did it!");
     }
     else if (GameState.row == 5) {
+
         ans.classList.add("wrong-answer");
+        GameState.gameOver=true;
         EndHandler("You failed!");
     }
     End();
+    LockGame(`r${GameState.row}c${GameState.column}`);
 }
 
 function End() {
     GameState.row++;
     GameState.column = 0;
     GameState.tryWord = [];
-    (GameState.row < 6) ? (FreeColumn(GameState.row)) : (GameState.row === 6, FreeColumn());
-    LockColumn(GameState.row - 1);
 }
 
 export { ButtonPress }

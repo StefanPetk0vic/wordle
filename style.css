@@ -31,8 +31,25 @@ input{
 }
 
 .header {
+    position: relative;
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    align-items:center;
+
+    width: 100vw;
+
+}
+
+.info {
+    position: absolute;
+    width:50px;
+    height: 50px;
+    right:0;
+    top:0;
+    margin-top: 10px;
+    margin-right: 10px;
+
 }
 
 .title{
@@ -47,12 +64,13 @@ input{
 
     display: flex;
     flex-direction: column;
-    width: 10px;
-    height: 10px;
 
-    margin-left: 5px;
+
+
+    margin-left: 0px;
+    margin-bottom: 0px;
+    margin-top: 0px;
     font-size: 2vh;
-    padding-top: 13px;
 
     row-gap: 2px;
 
@@ -172,9 +190,13 @@ input{
     pointer-events: auto;
 }
 .popup {
-    position: relative;
+    position: fixed;
+    top: 20%;
+
+    transform: translate(-50%, -50%) scale(0.8);
+
     width: 350px;
-    padding: 20px;
+    padding: 30px;
     border-radius: 10px;
     background-color: var(--popup-background-color);
     font-weight: 600;
@@ -223,11 +245,11 @@ input{
     }
 
     .error-type {
-        font-size: 30px;
+        font-size: 25px;
     }
 
     .end-type {
-        font-size: 30px;
+        font-size: 23px;
     }
 
     .restart {
@@ -278,8 +300,8 @@ input{
   .hint {
     
     border-radius: 30px;
-    width: 35px;
-    height: 36px;
+    width: 40px;
+    height: 41px;
     background-color: var(--key-background-color);
 
     border: 1.5px solid var(--key-border-color);
@@ -290,7 +312,7 @@ input{
 
     cursor: pointer;
 
-    margin-top: 0px;
+    margin-top: 10px;
     margin-bottom: 8px;
 
   }
@@ -307,7 +329,7 @@ input{
   .switch-mode {
       position: fixed;
       left: 2%;
-      top: 3%;
+      top: 2%;
       width: 50px;
       height: 20px;
       
@@ -315,21 +337,21 @@ input{
   
   .slider-background {
       background-color: var(--slider-background);
-      width: 45px;
-      height: 15px;
+      width: 58px;
+      height: 20px;
       border-radius: 10px;
       
   }
   
   .slider-day-sign {
-    font-size: 10px;
+    font-size: 14px;
     top: 0px;
-    left: 31px;
+    left: 38px;
     position: absolute;
   }
 
   .slider-night-sign {
-    font-size: 10px;
+    font-size: 14px;
     top: 0px;
     left: 0px;
     position: absolute;
@@ -337,8 +359,8 @@ input{
 
 
   .slider {
-      width: 13px;
-      height: 13px;
+      width: 18px;
+      height: 18px;
       background-color: rgb(237, 237, 237);
       border-radius: 50%;
       position: absolute;
@@ -355,7 +377,7 @@ input{
   }
 
   .slider.active {
-    left: 31px;
+    left: 37.5px;
     transition: left 0.3s ease;
 }
 
@@ -445,8 +467,8 @@ body.night {
 
     .hint {
         font-size: 11px;
-        width: 25px;
-        height: 26px;
+        width: 30px;
+        height: 31px;
         margin-bottom: 0px;
     }
     
@@ -455,7 +477,7 @@ body.night {
     }    
 
     .grid-container {
-        margin-bottom: 0px;
+        margin-bottom: 5px;
     }
 
     .switch-mode {
@@ -466,6 +488,7 @@ body.night {
         height: 20px;
         
     }
+
     
     .slider-background {
         background-color: var(--slider-background);
@@ -523,7 +546,58 @@ body.night {
         width: 200px;
         
       }
-      
-    
-  
 }
+
+@media (max-width: 415px) {
+    
+    .key {
+        padding-top: 10px;
+        padding-left: 9px;
+        padding-right: 9px;
+
+        margin: 0px;  
+        font-size: 11px;  
+    }
+
+    .keyboard-row {
+        margin-top: 7px;
+    }
+
+    .keyboard-container {
+        margin-top: 1px;
+    }
+
+    .hint {
+        font-size: 18px;
+        width: 30px;
+        height: 31px;
+        margin-top : 15px;
+    }
+}
+
+
+@media (max-width: 350px) {
+    
+    .key {
+        padding-top: 8px;
+        padding-left: 9px;
+        padding-right: 9px;
+
+        margin: 0px;  
+        font-size: 10px;  
+    }
+    
+    .hint {
+        font-size: 14px;
+        width: 30px;
+        height: 31px;
+        margin-top : 30px;
+    }
+
+    .box {
+
+        width: 5vh;
+        height: 7vh;
+    }
+}
+
