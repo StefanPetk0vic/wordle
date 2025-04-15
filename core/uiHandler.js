@@ -21,7 +21,6 @@ document.addEventListener("keydown", function (event) {
             let inputBox = document.getElementById(`r${GameState.row}c${GameState.column}`);
             if (inputBox) {
                 inputBox.value = "";
-                inputBox.disabled = false;
                 inputBox.classList.remove("added-character");
                 inputBox.focus();
 
@@ -60,7 +59,7 @@ document.addEventListener("keydown", function (event) {
 
         if (GameState.column < 5) {
             let nextInput = document.getElementById(`r${GameState.row}c${GameState.column}`);
-            nextInput.disabled = false;
+            //nextInput.disabled = false;
         }
 
         console.log("Added letter with EventListener");
@@ -84,7 +83,7 @@ function AddLetter(clicked_id, input_value) {
 
         if(GameState.column<5)
             {   let nextInput = document.getElementById(`r${GameState.row}c${GameState.column}`);
-                nextInput.disabled = false;
+                //nextInput.disabled = false;
             }
         //Changed for easier stacking of logs in inspect
         console.log("Added from AddLetter(): " + GameState.tryWord);
