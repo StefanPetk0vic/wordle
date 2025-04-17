@@ -5,20 +5,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animationstyle.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <script type="module" src="./model.js"></script>
+    <script type="module" src="./model.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
     <title>📚Wordle</title>
 </head>
 
+
+
 <body>
-    <main class="container">
-        <header>
-            <h1>Wordle</h1>
-            <h2 style="text-align: center;">🟩🟧🟥</h2>
-        </header>
+    <script>
+        const body = document.body;
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            body.classList.add('night');
+        }
+    </script>
+
+    <div class="popup" id="loading-page">
+        Game is being setup<br>
+        Please wait...
+    </div>
+
+    <main class="container loading-disabled">
+        <div class="header">
+
+            <div class="switch-mode">
+                <div class="slider-background"></div>
+                <div class="slider-night-sign">🌜</div>
+                <div class="slider-day-sign">🌞</div>
+                <button class="slider" id="slider" onclick="SwitchMode()"></button>
+            </div>
+            <div class="title"> Wordle </div>
+            <div class="emojis">
+                <div class="emoji">🟥</div>
+                <div class="emoji">🟨</div>
+                <div class="emoji">🟩</div>
+            </div>
+            <button class="info-btn" onclick="ShowInfo()">
+                <p style="font-size: 2rem;">?</p>
+            </button>
+        </div>
+
         <div class="grid-container"></div>
+        </div>
+
         <div class="keyboard-container">
             <div class="keyboard-row">
                 <button class="key" id="Q" onclick="AddLetter(this.id)">Q</button>
@@ -60,23 +96,57 @@
             </div>
         </div>
 
+        <div class="hint-container">
+            <button class="hint" onclick="ShowHint()"> 💡 </button>
+        </div>
+
         <div class="popup-container hidden" id="errorPopupContainer">
             <div class="popup">
                 <p class="error-type" id="errorText"></p>
             </div>
         </div>
-        
+
         <div class="popup-container hidden" id="endPopupContainer">
             <div class="popup">
                 <p class="end-type" id="endText"></p>
                 <button class="x" id="closeEndPopup">✖</button>
-                <p class ="line">The correct word was:</p>
-                <p class = "answer" id ="answerText"></p>
-                <p class="description" id ="descText"></p>
-                <button class="restart" id="playAgain">Play again</button>
+                <p class="line">The correct word was:</p>
+                <p class="answer" id="answerText"></p>
+                <p class="description" id="descText"></p>
+                <button class="restart" id="playAgain">
+                    <span class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                        </svg>
+                    </span>
+                    <span>Play again</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="popup-container hidden" id="hintPopupContainer">
+            <div class="popup">
+                <button class="x" id="closeHintPopup">✖</button>
+                <p class="description" id="descHint"></p>
+            </div>
+        </div>
+        <div class="popup-container hidden" id="infoPopupContainer">
+            <div class="popup">
+                <button class="x" id="closeInfoPopup">✖</button>
+                <p class="popup-info" id="descTitle"></p>
+                <p class="popup-info" id="descEmoji"></p>
+                <p class="popup-info" id="descInfo" style="font-size: 15px;"></p>
+                <p class="popup-info" id="descGreen" style="text-align: left; font-size: 15px;"></p>
+                <p class="popup-info" id="descOrange" style="text-align: left; font-size: 15px;"></p>
+                <p class="popup-info" id="descRed" style="text-align: left; font-size: 15px;"></p>
+                <p class="popup-info" id="descGoodLuck"></p>
+                <p class="popup-info" style="font-size: 15px;">made by: <a href="https://github.com/StefanPetk0vic">StefanPetk0vic</a> | <a href="https://github.com/asija-p">Asija-p</a> </p>
             </div>
         </div>
     </main>
+
 </body>
- 
+
 </html>

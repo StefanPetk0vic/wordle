@@ -1,21 +1,25 @@
 import { GameState } from "../data/gameState.js";
-import { FreeColumn, EndHandler, ErrorHandler } from "../utils/utils.js";
-
-
+import { EndHandler, ErrorHandler, LockGame } from "../utils/utils.js";
+import { AddShakingAnimation } from "../animations/animations.js";
 
 async function ButtonPress() {
 
     if (GameState.answer.length != GameState.tryWord.length) {
+
+        AddShakingAnimation();
+
         ErrorHandler("The length of the word isn't 5 letters");
         return;
     }
-    console.log(GameState.tryWord.join(""));
-    const exists = await WordExists(GameState.tryWord.join(""));
+    const exists = await getMeaning(GameState.tryWord.join(""));
+
     if (!exists) {
+
+        AddShakingAnimation();
+        
         ErrorHandler("The word does not exist");
         return;
     }
-
 
     let answerChars = [...GameState.answer];
     let tryWordChars = [...GameState.tryWord];
@@ -23,9 +27,13 @@ async function ButtonPress() {
     for (let i = 0; i < GameState.answer.length; i++) {
         const inputId = `r${GameState.row}c${i}`;
         const targetBox = document.getElementById(inputId);
+        
+
+        targetBox.classList.add('flip-box'); 
 
         if (GameState.tryWord[i] === GameState.answer[i]) {
-            targetBox.style.backgroundColor = "rgb(114,221,38)";
+            targetBox.classList.add("correct-box");
+
             answerChars[i] = null;
             tryWordChars[i] = null;
         }
@@ -41,39 +49,36 @@ async function ButtonPress() {
         const targetBox = document.getElementById(inputId);
 
         if (tryWordChars[i] !== null && answerChars.includes(tryWordChars[i])) {
-            targetBox.style.backgroundColor = "rgb(248, 215, 50)";
+            targetBox.classList.add("close-box");
             answerChars[answerChars.indexOf(tryWordChars[i])] = null;
         } else if (tryWordChars[i] !== null) {
-            targetBox.style.backgroundColor = "rgb(244, 62, 62)";
+            targetBox.classList.add("wrong-box");
 
         }
     }
-
-    if (GameState.tryWord.join("") === GameState.answer) {
-        End();
-        EndHandler("You did it!");
-        return; 
-    }
-    else if (GameState.row==5)
-    {
-        End();
-        EndHandler("You failed!");
-        return; 
-    }
-
-    End();
-
   
+    let ans = document.getElementById("answerText");
+    
+    if (GameState.tryWord.join("") === GameState.answer) {
+       
+        ans.classList.add("correct-answer");
+        GameState.gameOver=true;
+        EndHandler("You did it!");
+    }
+    else if (GameState.row == 5) {
+
+        ans.classList.add("wrong-answer");
+        GameState.gameOver=true;
+        EndHandler("You failed!");
+    }
+    End();
+    LockGame(`r${GameState.row}c${GameState.column}`);
 }
 
-function End()
-{
+function End() {
     GameState.row++;
     GameState.column = 0;
     GameState.tryWord = [];
-    if (GameState.row < 6) {
-        FreeColumn(GameState.row); 
-    }
 }
 
-export {ButtonPress}
+export { ButtonPress }

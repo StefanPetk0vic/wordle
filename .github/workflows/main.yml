@@ -1,0 +1,29 @@
+name: Deploy static site to GitHub Pages
+
+on:
+  push:
+    branches:
+      - Anastasijin-branch
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: .  # or "public" if your files are in a folder
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v2

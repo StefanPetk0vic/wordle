@@ -1,22 +1,27 @@
 import { ResetGame } from "../core/uiHandler.js";
 import { GameState } from "../data/gameState.js";
 
+const resetButton = document.getElementById("playAgain");
+resetButton.addEventListener("click", () => {
+
+    const popupContainer = document.getElementById('endPopupContainer');
+    ResetGame();
+    popupContainer.classList.remove("show");
+});
 
 function ErrorHandler(errorInfo) {
-
     const popupContainer = document.getElementById('errorPopupContainer');
     const popup = document.getElementById("popup");
     let errorMsg = document.querySelector("#errorText");
 
     popupContainer.classList.add("show");
     errorMsg.textContent = errorInfo;
-    console.log("error");
+    //console.log("error found by ErrorHandler()");
+    console.log(errorInfo);
 
-    clearTimeout(GameState.popupTimeout);
-
-    GameState.popupTimeout = setInterval(() => {
+    GameState.popupTimeout = setTimeout(() => {
         popupContainer.classList.remove("show");
-    }, 1000);
+    }, 500);
 }
 
 function EndHandler(endInfo) {
@@ -27,92 +32,169 @@ function EndHandler(endInfo) {
     let endMsg = document.querySelector("#endText");
     let desc = document.getElementById("descText");
     let ans = document.getElementById("answerText");
-    let resetButton = document.getElementById("playAgain");
+
+
 
     popupContainer.classList.add("show");
     endMsg.textContent = endInfo;
     ans.textContent = `${GameState.answer}`;
-    desc.textContent = `Meaning: ${GameState.desc}`
-    console.log("end");
+    desc.textContent = `Meaning: ${GameState.desc}`;
+
+    const computedColor = window.getComputedStyle(ans).color;
+    resetButton.style.backgroundColor = computedColor;
+
+    console.log("end of Game");
 
     closeButton.addEventListener("click", () => {
         popupContainer.classList.remove("show");
     });
 
-    resetButton.addEventListener("click", () => {
-        ResetGame();
-        popupContainer.classList.remove("show");
-    });
 }
 
-function FreeColumn(param = 0) {
+function LockColumn(param) {
     let targetInput;
-    let FocusFirst;
     for (let i = 0; i < 5; i++) {
         targetInput = document.getElementById(`r${param}c${i}`);
-        FocusFirst = document.getElementById(`r${param}c${0}`);
         if (targetInput) {
-            targetInput.removeAttribute("disabled");
+            targetInput.setAttribute("disabled", "true");
         } else {
-            console.warn(`Input element r${param}c${i} not found`);
-        }
-        if(i==0){
-            console.log("EVOOO MEEE FOCUS MEEE");
-            setTimeout(() => {
-                FocusFirst.focus();
-            }, 0);
-        }
-    }
-}
-function GenerateGrid() {
-    let gridContainer = document.querySelector(".grid-container");
-    const rows = 6;
-    const cols=5;
-    for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-            let InputBox = document.createElement('input');
-            InputBox.className="box";
-            InputBox.type = "text";
-            InputBox.maxLength=1;
-            InputBox.value="";
-            InputBox.autocomplete="off";
-            InputBox.disabled =true;
-            InputBox.id=`r${r}c${c}`;
-            InputBox.setAttribute('oninput',`handleInput(this.id,this.value)`);
-            gridContainer.appendChild(InputBox);
+            console.warn(`Error something went wrong on the ${i}th attempt`);
         }
     }
 }
 
-function ClearGrid()
-{
+function GenerateGrid() {
     let gridContainer = document.querySelector(".grid-container");
-    const rows = 6;
-    const cols=5;
-    for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
+    for (let r = 0; r < GameState.gameRows; r++) {
+        let rowDiv = document.createElement('div');
+        rowDiv.className = "box-row";
+        for (let c = 0; c < GameState.gameCols; c++) {
+            let InputBox = document.createElement('input');
+            InputBox.className = "box";
+            InputBox.type = "text";
+            InputBox.maxLength = 1;
+            InputBox.value = "";
+            InputBox.autocomplete = "off";
+            InputBox.disabled = true;
+            InputBox.id = `r${r}c${c}`;
+            rowDiv.appendChild(InputBox);
+        }
+        gridContainer.appendChild(rowDiv);
+
+    }
+    setTimeout(GridLoaded, 500);
+}
+
+function GridLoaded() {
+    let main = document.querySelector("main")
+    main.classList.remove('loading-disabled');
+    main.classList.add('show');
+    let loadingPopup = document.getElementById("loading-page");
+    loadingPopup.classList.add('loading-disabled');
+}
+
+function ClearGrid() {
+    let gridContainer = document.querySelector(".grid-container");
+    for (let r = 0; r < GameState.gameRows; r++) {
+        for (let c = 0; c < GameState.gameCols; c++) {
             const cellId = `r${r}c${c}`;
             const cell = document.getElementById(cellId);
 
             if (cell) {
-                const cellColor = cell.style.backgroundColor;
-                const cellValue = cell.value;
 
-                if (cellColor === "rgb(244, 62, 62)" && cellValue) {
-                    const keyBtn = document.getElementById(cellValue.toUpperCase());
+                if (cell && cell.classList.contains("wrong-box") && cell.value) {
+                    const keyBtn = document.getElementById(cell.value.toUpperCase());
 
-                    if (keyBtn) 
-                        {
-                            keyBtn.classList.remove("wrong-letter");
-                        }
-                 
+                    if (keyBtn) {
+                        keyBtn.classList.remove("wrong-letter");
+                    }
+
                 }
 
                 cell.value = "";
-                cell.style.backgroundColor = "rgb(255, 255, 255)"; 
+                cell.classList.remove("wrong-box", "correct-box", "close-box", "added-character");
             }
         }
     }
 }
 
-export { ErrorHandler, EndHandler, FreeColumn, GenerateGrid, ClearGrid };
+function ShowHint() {
+
+    const popupContainer = document.getElementById('hintPopupContainer');
+    const popup = document.getElementById("popup");
+    const closeButton = document.getElementById("closeHintPopup");
+    let desc = document.getElementById("descHint");
+
+    popupContainer.classList.add("show");
+    desc.textContent = `Meaning: ${GameState.desc}`
+    console.log("hint shown");
+
+    closeButton.addEventListener("click", () => {
+        popupContainer.classList.remove("show");
+    });
+    GameState.score -= 25;
+
+}
+
+function ShowInfo() {
+
+    const popupContainer = document.getElementById('infoPopupContainer');
+    const popup = document.getElementById("popup");
+    const closeButton = document.getElementById("closeInfoPopup");
+    let info = document.getElementById("descTitle");
+    info.textContent=`Welcome to Wordle !`;
+    info = document.getElementById("descEmoji");
+    info.textContent=`🟥🟧🟩`;
+    
+    info = document.getElementById("descInfo");
+    info.textContent=` The following colors represent:`;
+    
+    info = document.getElementById("descGreen");
+    info.textContent=`🟩 <- The position matches the letter`;
+
+    info = document.getElementById("descOrange");
+    info.textContent=`🟧 <- The position doesn't match the letter`;
+
+    info = document.getElementById("descRed");
+    info.textContent=`🟥 <- The letter doesn't exist in the word`;
+
+    info = document.getElementById("descGoodLuck");
+    info.textContent=`Good luck and have fun !`;
+
+    
+    popupContainer.classList.add("show");    
+    console.log("info shown");
+
+    closeButton.addEventListener("click", () => {
+        popupContainer.classList.remove("show");
+    });
+}
+
+
+function LockGame(inputId) {
+    if (GameState.column < 5) {
+        console.log("Locking " + inputId);
+        let nextInput = document.getElementById(inputId);
+        if (nextInput) {
+            nextInput.disabled = true;
+        } 
+        else {
+            console.log(`Element with ID ${inputId} not found.`);
+        }
+    }
+}
+
+function UnlockGame() {
+
+    const inputId = `r0c0`;
+    let nextInput = document.getElementById(inputId);
+    if (nextInput) {
+        nextInput.disabled = false;
+        console.log(`Unlocking: r0c0.`);
+    } else {
+        console.log(`Error with unlocking r0c0.`);
+    }
+
+}
+
+export { ErrorHandler, EndHandler, GenerateGrid, ClearGrid, ShowHint, LockGame, UnlockGame, LockColumn,ShowInfo };
