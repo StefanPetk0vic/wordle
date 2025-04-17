@@ -11,4 +11,5 @@ function AddShakingAnimation()
         }, { once: true });
     }
 }
+
 export {  AddShakingAnimation }

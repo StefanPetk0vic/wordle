@@ -1,33 +1,28 @@
 import { ResetGame } from "../core/uiHandler.js";
 import { GameState } from "../data/gameState.js";
 
-
-function ErrorHandler(errorInfo) {
-    const popupContainer= document.getElementById('errorPopupContainer');
-    const popup = document.getElementById("popup");
-    let errorMsg = document.querySelector("#errorText");
-
-    popupContainer.classList.add("show");
-    errorMsg.textContent = errorInfo;
-    console.log("error found by ErrorHandler()");
-
-    console.log(errorInfo);
-    
-    GameState.popupTimeout = setTimeout(() => {
-        popupContainer.classList.remove("show");
-    }, 500);
-
-
-}
-
 const resetButton = document.getElementById("playAgain");
 resetButton.addEventListener("click", () => {
-    
+
     const popupContainer = document.getElementById('endPopupContainer');
     ResetGame();
     popupContainer.classList.remove("show");
 });
 
+function ErrorHandler(errorInfo) {
+    const popupContainer = document.getElementById('errorPopupContainer');
+    const popup = document.getElementById("popup");
+    let errorMsg = document.querySelector("#errorText");
+
+    popupContainer.classList.add("show");
+    errorMsg.textContent = errorInfo;
+    //console.log("error found by ErrorHandler()");
+    console.log(errorInfo);
+
+    GameState.popupTimeout = setTimeout(() => {
+        popupContainer.classList.remove("show");
+    }, 500);
+}
 
 function EndHandler(endInfo) {
 
@@ -39,7 +34,7 @@ function EndHandler(endInfo) {
     let ans = document.getElementById("answerText");
 
 
-    
+
     popupContainer.classList.add("show");
     endMsg.textContent = endInfo;
     ans.textContent = `${GameState.answer}`;
@@ -53,30 +48,27 @@ function EndHandler(endInfo) {
     closeButton.addEventListener("click", () => {
         popupContainer.classList.remove("show");
     });
-  
+
 }
 
-
-
-function FreeColumn(row = 0, col = 0) {
-    const targetInput = document.getElementById(`r${row}c${col}`);
-
-    if (targetInput) {
-        targetInput.removeAttribute("disabled");
-    } else {
-        console.warn(`Input element r${row}c${col} not found`);
+function LockColumn(param) {
+    let targetInput;
+    for (let i = 0; i < 5; i++) {
+        targetInput = document.getElementById(`r${param}c${i}`);
+        if (targetInput) {
+            targetInput.setAttribute("disabled", "true");
+        } else {
+            console.warn(`Error something went wrong on the ${i}th attempt`);
+        }
     }
 }
 
-
 function GenerateGrid() {
     let gridContainer = document.querySelector(".grid-container");
-    const rows = 6;
-    const cols = 5;
-    for (let r = 0; r < rows; r++) {
+    for (let r = 0; r < GameState.gameRows; r++) {
         let rowDiv = document.createElement('div');
         rowDiv.className = "box-row";
-        for (let c = 0; c < cols; c++) {
+        for (let c = 0; c < GameState.gameCols; c++) {
             let InputBox = document.createElement('input');
             InputBox.className = "box";
             InputBox.type = "text";
@@ -88,15 +80,23 @@ function GenerateGrid() {
             rowDiv.appendChild(InputBox);
         }
         gridContainer.appendChild(rowDiv);
+
     }
+    setTimeout(GridLoaded, 500);
 }
-function ClearGrid()
-{
+
+function GridLoaded() {
+    let main = document.querySelector("main")
+    main.classList.remove('loading-disabled');
+    main.classList.add('show');
+    let loadingPopup = document.getElementById("loading-page");
+    loadingPopup.classList.add('loading-disabled');
+}
+
+function ClearGrid() {
     let gridContainer = document.querySelector(".grid-container");
-    const rows = 6;
-    const cols=5;
-    for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
+    for (let r = 0; r < GameState.gameRows; r++) {
+        for (let c = 0; c < GameState.gameCols; c++) {
             const cellId = `r${r}c${c}`;
             const cell = document.getElementById(cellId);
 
@@ -105,11 +105,10 @@ function ClearGrid()
                 if (cell && cell.classList.contains("wrong-box") && cell.value) {
                     const keyBtn = document.getElementById(cell.value.toUpperCase());
 
-                    if (keyBtn) 
-                        {
-                            keyBtn.classList.remove("wrong-letter");
-                        }
-                 
+                    if (keyBtn) {
+                        keyBtn.classList.remove("wrong-letter");
+                    }
+
                 }
 
                 cell.value = "";
@@ -133,8 +132,44 @@ function ShowHint() {
     closeButton.addEventListener("click", () => {
         popupContainer.classList.remove("show");
     });
+    GameState.score -= 25;
 
 }
+
+function ShowInfo() {
+
+    const popupContainer = document.getElementById('infoPopupContainer');
+    const popup = document.getElementById("popup");
+    const closeButton = document.getElementById("closeInfoPopup");
+    let info = document.getElementById("descTitle");
+    info.textContent=`Welcome to Wordle !`;
+    info = document.getElementById("descEmoji");
+    info.textContent=`🟥🟧🟩`;
+    
+    info = document.getElementById("descInfo");
+    info.textContent=` The following colors represent:`;
+    
+    info = document.getElementById("descGreen");
+    info.textContent=`🟩 <- The position matches the letter`;
+
+    info = document.getElementById("descOrange");
+    info.textContent=`🟧 <- The position doesn't match the letter`;
+
+    info = document.getElementById("descRed");
+    info.textContent=`🟥 <- The letter doesn't exist in the word`;
+
+    info = document.getElementById("descGoodLuck");
+    info.textContent=`Good luck and have fun !`;
+
+    
+    popupContainer.classList.add("show");    
+    console.log("info shown");
+
+    closeButton.addEventListener("click", () => {
+        popupContainer.classList.remove("show");
+    });
+}
+
 
 function LockGame(inputId) {
     if (GameState.column < 5) {
@@ -142,16 +177,16 @@ function LockGame(inputId) {
         let nextInput = document.getElementById(inputId);
         if (nextInput) {
             nextInput.disabled = true;
-        } else {
+        } 
+        else {
             console.log(`Element with ID ${inputId} not found.`);
         }
     }
 }
 
-function UnLockGame()
-{
+function UnlockGame() {
 
-    const inputId = `r0c0`; 
+    const inputId = `r0c0`;
     let nextInput = document.getElementById(inputId);
     if (nextInput) {
         nextInput.disabled = false;
@@ -162,12 +197,4 @@ function UnLockGame()
 
 }
 
-function InitPage() {
-    document.addEventListener("click", function triggerEvent() {
-      window.open("https://www.youtube.com/watch?v=51zjlMhdSTE", "_blank");
-    }, { once: true });
-  }
-
-
-
-export { ErrorHandler, EndHandler, FreeColumn, GenerateGrid, ClearGrid, ShowHint, LockGame, UnLockGame, InitPage };
+export { ErrorHandler, EndHandler, GenerateGrid, ClearGrid, ShowHint, LockGame, UnlockGame, LockColumn,ShowInfo };

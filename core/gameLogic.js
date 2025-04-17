@@ -1,12 +1,8 @@
 import { GameState } from "../data/gameState.js";
-import { FreeColumn, EndHandler, ErrorHandler, LockGame } from "../utils/utils.js";
+import { EndHandler, ErrorHandler, LockGame } from "../utils/utils.js";
 import { AddShakingAnimation } from "../animations/animations.js";
 
 async function ButtonPress() {
-
-    if (event) {
-        event.preventDefault();
-    }
 
     if (GameState.answer.length != GameState.tryWord.length) {
 
@@ -15,7 +11,7 @@ async function ButtonPress() {
         ErrorHandler("The length of the word isn't 5 letters");
         return;
     }
-    const exists = await getMeaning(GameState.tryWord.join(""), true);
+    const exists = await getMeaning(GameState.tryWord.join(""));
 
     if (!exists) {
 
@@ -31,6 +27,7 @@ async function ButtonPress() {
     for (let i = 0; i < GameState.answer.length; i++) {
         const inputId = `r${GameState.row}c${i}`;
         const targetBox = document.getElementById(inputId);
+        
 
         targetBox.classList.add('flip-box'); 
 
@@ -59,9 +56,9 @@ async function ButtonPress() {
 
         }
     }
-
+  
     let ans = document.getElementById("answerText");
-    console.log("EVOOO MEEE" + GameState.row);
+    
     if (GameState.tryWord.join("") === GameState.answer) {
        
         ans.classList.add("correct-answer");
