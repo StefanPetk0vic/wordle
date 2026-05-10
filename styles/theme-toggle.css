@@ -1,0 +1,78 @@
+
+.switch-mode {
+    position: fixed;
+    left: 2%;
+    top: 2%;
+    width: 50px;
+    height: 20px;
+
+}
+
+.slider-background {
+    background-color: var(--slider-background);
+    width: 58px;
+    height: 20px;
+    border-radius: 10px;
+
+}
+
+.slider-day-sign {
+    font-size: 14px;
+    top: 0px;
+    left: 38px;
+    position: absolute;
+}
+
+.slider-night-sign {
+    font-size: 14px;
+    top: 0px;
+    left: 0px;
+    position: absolute;
+}
+
+.slider {
+    width: 18px;
+    height: 18px;
+    background-color: rgb(237, 237, 237);
+    border-radius: 50%;
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    cursor: pointer;
+
+    border: 1.5px solid rgb(133, 133, 133);
+    transition: left 0.3s ease;
+}
+
+.slider:hover {
+    transform: scale(1.1);
+}
+
+.slider.active {
+    left: 37.5px;
+    transition: left 0.3s ease;
+}
+
+.correct-box {
+    background-color: var(--box-correct-color) !important;
+}
+
+.wrong-box {
+    background-color: var(--box-wrong-color) !important;
+}
+
+.close-box {
+    background-color: var(--box-close-color) !important;
+}
+
+.added-character {
+    background-color: var(--box-added-color);
+}
+
+.correct-answer {
+    color: var(--box-correct-color) !important;
+}
+
+.wrong-answer {
+    color: var(--box-wrong-color) !important;
+}
