@@ -2,7 +2,7 @@ import { GameState } from "../data/gameState.js";
 
 async function GetWord() {
 
-    const response = await fetch("https://random-word-api.vercel.app/api?words=1&length=5");
+    const response = await fetch("https://random-word-api.herokuapp.com/word?length=5");
     const [word] = await response.json();
 
     GameState.answer = word.toUpperCase();
